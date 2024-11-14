@@ -24,7 +24,7 @@ const HeaderSection = ({ data, setData, updateDataApi, setUpdateDataApi }) => {
         const name = e.target.name;
         const value = e.target.value
 
-        setAddData ((prev) => {
+        setAddData ((prev) => { 
             return {
                 ...prev,
                 [name]: value,
@@ -38,19 +38,24 @@ const HeaderSection = ({ data, setData, updateDataApi, setUpdateDataApi }) => {
         if (res.status === 201){
             setData([...data, res.data])
             setAddData({title: "", body:"",})
+            
         }
     }
 
+    
     const updatePostData = async () => {
        try{
-        
-            const res = await updateData(updateDataApi.id, addData);
+           const res = await updateData(updateDataApi.id, addData);
+        if (res.status === 200){
             setData((prev) => {
                 return prev.map((currItem) => {
                     return currItem.id === res.data.id? res.data: currItem
-                })
-            })
-       
+                });
+            });
+            setAddData({title:'',body:''});
+            setUpdateDataApi({});
+        }
+            
         }catch(e) {
             console.log(e)
        }
@@ -65,6 +70,7 @@ const HeaderSection = ({ data, setData, updateDataApi, setUpdateDataApi }) => {
         else if (action === "Edit") {
             updatePostData();
         }
+
     };
     
     return (
